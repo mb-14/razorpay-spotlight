@@ -1,3 +1,3 @@
 docker stop webhook
 docker build . -t webhook
-docker run -d -p 8080:8080 --name webhook webhook
+docker run -d --net=host --name webhook webhook
