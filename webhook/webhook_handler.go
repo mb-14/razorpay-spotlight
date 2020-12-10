@@ -37,7 +37,7 @@ func webhookEventHandler(c *gin.Context) {
 		amount, _ := json.GetInt("payload.payment.entity.amount")
 		method, _ := json.GetString("payload.payment.entity.method")
 		createdAt, _ := json.GetTime("payload.payment.entity.created_at")
-		p := influxdb2.NewPoint(PaymentAuthorized,
+		p := influxdb2.NewPoint("payment_authorized",
 			map[string]string{"method": method},
 			map[string]interface{}{"amount": amount},
 			createdAt)
