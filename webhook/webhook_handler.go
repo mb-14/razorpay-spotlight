@@ -22,6 +22,14 @@ const (
 	PaymentFailed     = "payment.failed"
 )
 
+// Methods
+const (
+	Netbanking = "netbanking"
+	Wallet     = "wallet"
+	UPI        = "upi"
+	Card       = "card"
+)
+
 func webhookEventHandler(c *gin.Context) {
 	payload, err := c.GetRawData()
 	if err != nil {
@@ -35,10 +43,9 @@ func webhookEventHandler(c *gin.Context) {
 	}
 	if event == PaymentAuthorized {
 		amount, _ := json.GetInt("payload.payment.entity.amount")
-		method, _ := json.GetString("payload.payment.entity.method")
 		createdAt, _ := json.GetTime("payload.payment.entity.created_at")
 		p := influxdb2.NewPoint("payment_authorized",
-			map[string]string{"method": method},
+			addTags(json),
 			map[string]interface{}{"amount": amount},
 			createdAt)
 		err = writeAPI.WritePoint(c.Request.Context(), p)
@@ -48,4 +55,31 @@ func webhookEventHandler(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, gin.H{"success": true})
 	}
+}
+
+func addTags(p Json) map[string]string {
+	tags := make(map[string]string)
+	// Common tags
+	method, _ := p.GetString("payload.payment.entity.method")
+	currency, _ := p.GetString("payload.payment.entity.currency")
+	tags["method"] = method
+	tags["currency"] = currency
+
+	if method == Netbanking {
+		tags["bank"], _ = p.GetString("payload.payment.entity.bank")
+	}
+
+	if method == Wallet {
+		// TODO add wallet name
+	}
+
+	if method == UPI {
+		// TODO - Exract psp from VPA and add as tag (@okhdfcbank, @oksbi, @paytm, @upi)
+	}
+
+	if method == Card {
+		// TODO Add card details
+	}
+
+	return tags
 }
