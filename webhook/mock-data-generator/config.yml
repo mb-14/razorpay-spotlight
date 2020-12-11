@@ -1,0 +1,28 @@
+event: payment_authorized
+method_distribution:
+  netbanking: 0.2
+  card: 0.4
+  upi: 0.3
+  wallet: 0.1
+enum_fields:
+  - path: method
+    distribution:
+      
+  - path: bank
+    distribution:
+      - value: HDFC
+        fraction: 0.3
+      - value: SBI
+        fraction: 0.4
+      - value: CITI
+        fraction: 0.3
+  - path: wallet
+    distribution:
+      - value: PAYTM
+        fraction: 0.5
+      - value: FREECHARGE
+        fraction: 0.4
+range_fields:
+   - path: amount
+     min: 10000
+     max: 50000    
