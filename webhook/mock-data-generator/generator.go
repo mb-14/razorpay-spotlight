@@ -77,6 +77,8 @@ func generatePayload(createdAt time.Time) []byte {
 		template.Set(field.Path, []byte(fmt.Sprintf(`%d`, value)))
 
 	}
+	template.Set("payload.payment.entity.method", []byte(fmt.Sprintf(`"%s"`, method)))
+
 	template.Set("payload.payment.entity.created_at", []byte(fmt.Sprintf(`%d`, createdAt.Unix())))
 	return template.Data
 }
