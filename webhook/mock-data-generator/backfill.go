@@ -45,6 +45,10 @@ func worker(id int, jobs <-chan time.Time, results chan<- error) {
 	for j := range jobs {
 		payload := bytes.NewBuffer(generatePayload(j))
 		resp, err := http.Post(Endpoint, "application/json", payload)
+		if err != nil {
+			results <- err
+			return
+		}
 		if resp.StatusCode != http.StatusOK {
 			var message []byte
 			resp.Body.Read(message)

@@ -10,7 +10,7 @@ const (
 )
 
 const (
-	Endpoint = "https://b9ef400928a48731d4888532d0493535.m.pipedream.net"
+	Endpoint = "http://159.65.149.215:8080/webhook"
 )
 
 type MethodConfig struct {

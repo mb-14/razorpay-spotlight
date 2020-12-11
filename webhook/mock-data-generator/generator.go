@@ -47,6 +47,7 @@ func init() {
 
 func generatePayload(createdAt time.Time) []byte {
 	method := methodChooser.Pick().(string)
+	fmt.Println(method)
 	template := templates[fmt.Sprintf("%s_%s.json", *event, method)]
 	if method == "netbanking" {
 		for _, field := range config.Netbanking.Fields {
@@ -77,5 +78,6 @@ func generatePayload(createdAt time.Time) []byte {
 		template.Set(field.Path, []byte(fmt.Sprintf(`%d`, value)))
 
 	}
+	template.Set("payload.payment.entity.created_at", []byte(fmt.Sprintf(`%d`, createdAt.Unix())))
 	return template.Data
 }

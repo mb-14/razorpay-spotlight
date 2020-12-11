@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -39,7 +40,7 @@ func webhookEventHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	json := json.Json{payload}
+	json := json.Json{Data: payload}
 	var event string
 	if value, err := json.GetString("event"); err == nil {
 		event = value
@@ -57,10 +58,11 @@ func webhookEventHandler(c *gin.Context) {
 
 }
 
-func writePaymentEvent(ctx context.Context, json json.Json, measurement string) error {
+func writePaymentEvent(ctx context.Context, json json.Json, event string) error {
 	amount, _ := json.GetInt("payload.payment.entity.amount")
 	createdAt, _ := json.GetTime("payload.payment.entity.created_at")
-	p := influxdb2.NewPoint(measurement,
+	method, _ := json.GetString("payload.payment.entity.method")
+	p := influxdb2.NewPoint(fmt.Sprintf("%s_%s", event, method),
 		addTags(json),
 		map[string]interface{}{"amount": amount},
 		createdAt)
@@ -72,7 +74,6 @@ func addTags(p json.Json) map[string]string {
 	// Common tags
 	method, _ := p.GetString("payload.payment.entity.method")
 	currency, _ := p.GetString("payload.payment.entity.currency")
-	tags["method"] = method
 	tags["currency"] = currency
 
 	if method == Netbanking {
