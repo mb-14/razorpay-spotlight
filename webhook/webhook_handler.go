@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -42,19 +43,26 @@ func webhookEventHandler(c *gin.Context) {
 		event = value
 	}
 	if event == PaymentAuthorized {
-		amount, _ := json.GetInt("payload.payment.entity.amount")
-		createdAt, _ := json.GetTime("payload.payment.entity.created_at")
-		p := influxdb2.NewPoint("payment_authorized",
-			addTags(json),
-			map[string]interface{}{"amount": amount},
-			createdAt)
-		err = writeAPI.WritePoint(c.Request.Context(), p)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"success": true})
+		err = writePaymentEvent(c.Request.Context(), json, "payment_authorized")
+	} else if event == PaymentFailed {
+		err = writePaymentEvent(c.Request.Context(), json, "payment_failed")
 	}
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"success": true})
+
+}
+
+func writePaymentEvent(ctx context.Context, json Json, measurement string) error {
+	amount, _ := json.GetInt("payload.payment.entity.amount")
+	createdAt, _ := json.GetTime("payload.payment.entity.created_at")
+	p := influxdb2.NewPoint(measurement,
+		addTags(json),
+		map[string]interface{}{"amount": amount},
+		createdAt)
+	return writeAPI.WritePoint(ctx, p)
 }
 
 func addTags(p Json) map[string]string {
