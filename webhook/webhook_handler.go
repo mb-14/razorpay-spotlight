@@ -62,6 +62,7 @@ func writePaymentEvent(ctx context.Context, json json.Json, event string) error 
 	amount, _ := json.GetInt("payload.payment.entity.amount")
 	createdAt, _ := json.GetTime("payload.payment.entity.created_at")
 	method, _ := json.GetString("payload.payment.entity.method")
+	fmt.Println(method)
 	p := influxdb2.NewPoint(fmt.Sprintf("%s_%s", event, method),
 		addTags(json),
 		map[string]interface{}{"amount": amount},
