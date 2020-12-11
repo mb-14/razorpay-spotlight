@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 
 func backfillEvents() {
 	timestamps := generateTimestamps()
+	fmt.Printf("Number of events: %d\n", len(timestamps))
 	numJobs := len(timestamps)
 	jobs := make(chan time.Time, numJobs)
 	results := make(chan error, numJobs)
@@ -48,7 +48,7 @@ func worker(id int, jobs <-chan time.Time, results chan<- error) {
 		if resp.StatusCode != http.StatusOK {
 			var message []byte
 			resp.Body.Read(message)
-			err = errors.New(string(message))
+			err = fmt.Errorf("%d : %s", resp.StatusCode, string(message))
 		}
 		results <- err
 	}

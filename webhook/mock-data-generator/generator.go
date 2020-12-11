@@ -24,10 +24,10 @@ func init() {
 	err = yaml.Unmarshal(configData, &config)
 	check(err)
 	methodChooser, err = wr.NewChooser(
-		wr.Choice{Item: "netbanking", Weight: config.MethodDistribution.Netbanking},
-		wr.Choice{Item: "wallet", Weight: config.MethodDistribution.Wallet},
-		wr.Choice{Item: "upi", Weight: config.MethodDistribution.Upi},
-		wr.Choice{Item: "card", Weight: config.MethodDistribution.Card},
+		wr.Choice{Item: "netbanking", Weight: config.Netbanking.Weight},
+		wr.Choice{Item: "wallet", Weight: config.Wallet.Weight},
+		wr.Choice{Item: "upi", Weight: config.Upi.Weight},
+		wr.Choice{Item: "card", Weight: config.Card.Weight},
 	)
 
 	if err != nil {
@@ -48,5 +48,34 @@ func init() {
 func generatePayload(createdAt time.Time) []byte {
 	method := methodChooser.Pick().(string)
 	template := templates[fmt.Sprintf("%s_%s.json", *event, method)]
+	if method == "netbanking" {
+		for _, field := range config.Netbanking.Fields {
+			value := field.Values[rand.Intn(len(field.Values))]
+			template.Set(field.Path, []byte(value))
+		}
+	}
+	if method == "card" {
+		for _, field := range config.Card.Fields {
+			value := field.Values[rand.Intn(len(field.Values))]
+			template.Set(field.Path, []byte(value))
+		}
+	}
+	if method == "upi" {
+		for _, field := range config.Upi.Fields {
+			value := field.Values[rand.Intn(len(field.Values))]
+			template.Set(field.Path, []byte(value))
+		}
+	}
+	if method == "wallet" {
+		for _, field := range config.Wallet.Fields {
+			value := field.Values[rand.Intn(len(field.Values))]
+			template.Set(field.Path, []byte(value))
+		}
+	}
+	for _, field := range config.RangeFields {
+		value := rand.Intn(field.Max-field.Min) + field.Min
+		template.Set(field.Path, []byte(fmt.Sprintf(`%d`, value)))
+
+	}
 	return template.Data
 }

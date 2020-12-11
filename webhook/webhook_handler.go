@@ -57,7 +57,7 @@ func webhookEventHandler(c *gin.Context) {
 
 }
 
-func writePaymentEvent(ctx context.Context, json Json, measurement string) error {
+func writePaymentEvent(ctx context.Context, json json.Json, measurement string) error {
 	amount, _ := json.GetInt("payload.payment.entity.amount")
 	createdAt, _ := json.GetTime("payload.payment.entity.created_at")
 	p := influxdb2.NewPoint(measurement,
@@ -67,7 +67,7 @@ func writePaymentEvent(ctx context.Context, json Json, measurement string) error
 	return writeAPI.WritePoint(ctx, p)
 }
 
-func addTags(p Json) map[string]string {
+func addTags(p json.Json) map[string]string {
 	tags := make(map[string]string)
 	// Common tags
 	method, _ := p.GetString("payload.payment.entity.method")
@@ -84,7 +84,7 @@ func addTags(p Json) map[string]string {
 	}
 
 	if method == UPI {
-		vpa, _ = p.GetString("payload.payment.entity.vpa")
+		vpa, _ := p.GetString("payload.payment.entity.vpa")
 		vpaString := strings.Split(vpa, "@")
 		tags["upiPsp"] = vpaString[1]
 	}

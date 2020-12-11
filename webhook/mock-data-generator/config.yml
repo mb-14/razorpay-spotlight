@@ -1,17 +1,28 @@
 event: payment_authorized
-method_distribution:
-  netbanking: 2
-  card: 4
-  upi: 3
-  wallet: 1
-enum_fields:      
-  - path: bank
-    values: [HDFC, SBI, CITI]
-  - path: wallet
-    values: [PAYTM, FREECHARGE]
-  - path: psp
-    values: [okhdfcbank, oksbi, upi, paytm]
+netbanking:
+  weight: 2
+  fields:
+    - path: payload.payment.entity.bank
+      values: ["HDFC", "SBI", "CITI"]
+card:
+  weight: 2
+  fields:
+    - path: payload.payment.entity.card.network
+      values: ["Visa", "Rupay", "Mastercard"]
+  fields:
+    - path: payload.payment.entity.card.type
+      values: ["credit", "debit"]
+wallet:
+  weight: 1
+  fields:
+    - path: payload.payment.entity.wallet
+      values: ["paytm", "freecharge"]
+upi:
+  weight: 1
+  fields:
+    - path: payload.payment.entity.vpa
+      values: ["test@okhdfcbank", "test@oksbi", "test@upi", "test@paytm"]
 range_fields:
-   - path: amount
-     min: 10000
-     max: 50000
+  - path: payload.payment.entity.amount
+    min: 10000
+    max: 50000
