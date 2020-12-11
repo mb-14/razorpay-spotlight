@@ -15,7 +15,7 @@ const (
 )
 
 var (
-	client   = influxdb2.NewClientWithOptions("http://localhost:8086", "", influxdb2.DefaultOptions().SetBatchSize(200))
+	client   = influxdb2.NewClientWithOptions("http://localhost:8086", "", influxdb2.DefaultOptions().SetBatchSize(2000))
 	writeAPI = client.WriteAPI("", DBName)
 )
 
@@ -74,7 +74,7 @@ func addTags(p json.Json) map[string]string {
 	method, _ := p.GetString("payload.payment.entity.method")
 	currency, _ := p.GetString("payload.payment.entity.currency")
 	tags["currency"] = currency
-
+	tags["method"] = method
 	if method == Netbanking {
 		tags["bank"], _ = p.GetString("payload.payment.entity.bank")
 	}
