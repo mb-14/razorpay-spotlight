@@ -85,7 +85,7 @@ func addTags(p Json) map[string]string {
 	if method == UPI {
 		vpa, _ = p.GetString("payload.payment.entity.vpa")
 		vpaString := strings.Split(vpa, "@")
-		tags["psp"] = vpaString[1]
+		tags["upiPsp"] = vpaString[1]
 	}
 
 	if method == Card {
