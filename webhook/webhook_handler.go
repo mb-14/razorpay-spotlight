@@ -79,7 +79,7 @@ func addTags(p Json) map[string]string {
 	}
 
 	if method == Wallet {
-		// TODO add wallet name
+		tags["walletName"], _ = p.GetString("payload.payment.entity.wallet")
 	}
 
 	if method == UPI {
