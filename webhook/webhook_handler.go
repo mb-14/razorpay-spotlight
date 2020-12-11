@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
@@ -83,6 +84,9 @@ func addTags(p Json) map[string]string {
 
 	if method == UPI {
 		// TODO - Exract psp from VPA and add as tag (@okhdfcbank, @oksbi, @paytm, @upi)
+		vpa, _ = p.GetString("payload.payment.entity.vpa")
+		vpaString := strings.Split(vpa, "@")
+		tags["psp"] = vpaString[1]
 	}
 
 	if method == Card {
