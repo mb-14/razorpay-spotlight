@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/mb-14/rzp-spotlight/webhook/json"
 )
 
 const (
@@ -37,7 +38,7 @@ func webhookEventHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	json := Json{payload}
+	json := json.Json{payload}
 	var event string
 	if value, err := json.GetString("event"); err == nil {
 		event = value
