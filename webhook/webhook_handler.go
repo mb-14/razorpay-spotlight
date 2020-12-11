@@ -83,14 +83,16 @@ func addTags(p Json) map[string]string {
 	}
 
 	if method == UPI {
-		// TODO - Exract psp from VPA and add as tag (@okhdfcbank, @oksbi, @paytm, @upi)
 		vpa, _ = p.GetString("payload.payment.entity.vpa")
 		vpaString := strings.Split(vpa, "@")
 		tags["psp"] = vpaString[1]
 	}
 
 	if method == Card {
-		// TODO Add card details
+		tags["cardNetwork"], _ = p.GetString("payload.payment.entity.card.network")
+		tags["cardType"], _ = p.GetString("payload.payment.entity.card.type")
+		tags["cardInternational"], _ = p.GetString("payload.payment.entity.card.international")
+		tags["cardIssuer"], _ = p.GetString("payload.payment.entity.card.issuer")
 	}
 
 	return tags
