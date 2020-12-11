@@ -51,25 +51,25 @@ func generatePayload(createdAt time.Time) []byte {
 	if method == "netbanking" {
 		for _, field := range config.Netbanking.Fields {
 			value := field.Values[rand.Intn(len(field.Values))]
-			template.Set(field.Path, []byte(value))
+			template.Set(field.Path, str(value))
 		}
 	}
 	if method == "card" {
 		for _, field := range config.Card.Fields {
 			value := field.Values[rand.Intn(len(field.Values))]
-			template.Set(field.Path, []byte(value))
+			template.Set(field.Path, str(value))
 		}
 	}
 	if method == "upi" {
 		for _, field := range config.Upi.Fields {
 			value := field.Values[rand.Intn(len(field.Values))]
-			template.Set(field.Path, []byte(value))
+			template.Set(field.Path, str(value))
 		}
 	}
 	if method == "wallet" {
 		for _, field := range config.Wallet.Fields {
 			value := field.Values[rand.Intn(len(field.Values))]
-			template.Set(field.Path, []byte(value))
+			template.Set(field.Path, str(value))
 		}
 	}
 	for _, field := range config.RangeFields {
@@ -77,8 +77,11 @@ func generatePayload(createdAt time.Time) []byte {
 		template.Set(field.Path, []byte(fmt.Sprintf(`%d`, value)))
 
 	}
-	template.Set("payload.payment.entity.method", []byte(fmt.Sprintf(`"%s"`, method)))
 
 	template.Set("payload.payment.entity.created_at", []byte(fmt.Sprintf(`%d`, createdAt.Unix())))
 	return template.Data
+}
+
+func str(s string) []byte {
+	return []byte(fmt.Sprintf(`"%s"`, s))
 }

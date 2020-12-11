@@ -15,8 +15,8 @@ const (
 )
 
 var (
-	client   = influxdb2.NewClient("http://localhost:8086", "")
-	writeAPI = client.WriteAPIBlocking("", DBName)
+	client   = influxdb2.NewClientWithOptions("http://localhost:8086", "", influxdb2.DefaultOptions().SetBatchSize(200))
+	writeAPI = client.WriteAPI("", DBName)
 )
 
 // Events
@@ -64,7 +64,8 @@ func writePaymentEvent(ctx context.Context, json json.Json, event string) error 
 		addTags(json),
 		map[string]interface{}{"amount": amount},
 		createdAt)
-	return writeAPI.WritePoint(ctx, p)
+	writeAPI.WritePoint(p)
+	return nil
 }
 
 func addTags(p json.Json) map[string]string {
