@@ -5,8 +5,10 @@ import (
 )
 
 const (
-	Realtime = "realtime"
-	Backfill = "backfill"
+	Realtime          = "realtime"
+	Backfill          = "backfill"
+	PaymentAuthorized = "payment_authorized"
+	PaymentFailed     = "payment_failed"
 )
 
 const (
@@ -23,7 +25,6 @@ type MethodConfig struct {
 }
 
 type Config struct {
-	Event       string       `yaml:"event"`
 	Netbanking  MethodConfig `yaml:"netbanking"`
 	Card        MethodConfig `yaml:"card"`
 	Wallet      MethodConfig `yaml:"wallet"`
@@ -33,6 +34,10 @@ type Config struct {
 		Min  int    `yaml:"min"`
 		Max  int    `yaml:"max"`
 	} `yaml:"range_fields"`
+	ErrorFields []struct {
+		Path   string   `yaml:"path"`
+		Values []string `yaml:"values"`
+	} `yaml:"error_fields"`
 }
 
 var interval = flag.Int64("interval", 5000, "Number of milliseconds between events")

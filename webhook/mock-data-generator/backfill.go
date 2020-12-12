@@ -1,75 +1,28 @@
 package main
 
 import (
-	"bytes"
-	"fmt"
 	"math/rand"
-	"net/http"
 	"time"
 
-	"github.com/cheggaaa/pb/v3"
-	"github.com/ewohltman/pool"
+	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/mb-14/rzp-spotlight/webhook/rzp"
 )
 
-var (
-	standardLibClient = &http.Client{}
-
-	pooledClient = pool.NewPClient(standardLibClient, 25, 200)
+const (
+	DBName     = "rzpftx"
+	DBEndpoint = "http://localhost:8086"
 )
 
 func backfillEvents() {
+	client := influxdb2.NewClient(DBEndpoint, "")
+	writeAPI := client.WriteAPI("", DBName)
 	timestamps := generateTimestamps()
-	fmt.Printf("Number of events: %d\n", len(timestamps))
-	numJobs := len(timestamps)
-	bar := pb.StartNew(numJobs)
-	jobs := make(chan time.Time, numJobs)
-	results := make(chan error, numJobs)
-
-	// This starts up 3 workers, initially blocked
-	// because there are no jobs yet.
-	for w := 1; w <= 3; w++ {
-		go worker(w, jobs, results)
-	}
-
-	// Here we send 5 `jobs` and then `close` that
-	// channel to indicate that's all the work we have.
 	for _, t := range timestamps {
-		jobs <- t
+		payload := generatePayloadJson(t)
+		point := rzp.ProcessPayloadJson(payload)
+		writeAPI.WritePoint(point)
 	}
-
-	close(jobs)
-
-	// Finally we collect all the results of the work.
-	// This also ensures that the worker goroutines have
-	// finished. An alternative way to wait for multiple
-	// goroutines is to use a [WaitGroup](waitgroups).
-	for a := 1; a <= numJobs; a++ {
-		err := <-results
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-		bar.Increment()
-	}
-	bar.Finish()
-}
-
-func worker(id int, jobs <-chan time.Time, results chan<- error) {
-	for j := range jobs {
-		payload := bytes.NewBuffer(generatePayload(j))
-		req, err := http.NewRequest("POST", Endpoint, payload)
-		resp, err := pooledClient.DoPool(req)
-		if err != nil {
-			results <- err
-			return
-		}
-		defer resp.Body.Close()
-		if resp.StatusCode != http.StatusOK {
-			var message []byte
-			resp.Body.Read(message)
-			err = fmt.Errorf("%d : %s", resp.StatusCode, string(message))
-		}
-		results <- err
-	}
+	client.Close()
 }
 
 func generateTimestamps() []time.Time {
