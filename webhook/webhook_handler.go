@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/mb-14/rzp-spotlight/webhook/json"
 )
 
 const (
@@ -38,7 +39,7 @@ func webhookEventHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	json := Json{payload}
+	json := json.Json{Data: payload}
 	var event string
 	if value, err := json.GetString("event"); err == nil {
 		event = value
@@ -56,24 +57,23 @@ func webhookEventHandler(c *gin.Context) {
 
 }
 
-func writePaymentEvent(ctx context.Context, json Json, measurement string) error {
+func writePaymentEvent(ctx context.Context, json json.Json, event string) error {
 	amount, _ := json.GetInt("payload.payment.entity.amount")
 	createdAt, _ := json.GetTime("payload.payment.entity.created_at")
-	p := influxdb2.NewPoint(measurement,
+	p := influxdb2.NewPoint(event,
 		addTags(json),
 		map[string]interface{}{"amount": amount},
 		createdAt)
 	return writeAPI.WritePoint(ctx, p)
 }
 
-func addTags(p Json) map[string]string {
+func addTags(p json.Json) map[string]string {
 	tags := make(map[string]string)
 	// Common tags
 	method, _ := p.GetString("payload.payment.entity.method")
 	currency, _ := p.GetString("payload.payment.entity.currency")
-	tags["method"] = method
 	tags["currency"] = currency
-
+	tags["method"] = method
 	if method == Netbanking {
 		tags["bank"], _ = p.GetString("payload.payment.entity.bank")
 	}
@@ -83,7 +83,7 @@ func addTags(p Json) map[string]string {
 	}
 
 	if method == UPI {
-		vpa, _ = p.GetString("payload.payment.entity.vpa")
+		vpa, _ := p.GetString("payload.payment.entity.vpa")
 		vpaString := strings.Split(vpa, "@")
 		tags["upiPsp"] = vpaString[1]
 	}
