@@ -5,8 +5,10 @@ import (
 )
 
 const (
-	Realtime = "realtime"
-	Backfill = "backfill"
+	Realtime          = "realtime"
+	Backfill          = "backfill"
+	PaymentAuthorized = "payment_authorized"
+	PaymentFailed     = "payment_failed"
 )
 
 const (
