@@ -1,0 +1,155 @@
+version: "2.0"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - good afternoon
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+
+- intent: mood_great
+  examples: |
+    - perfect
+    - great
+    - amazing
+    - feeling like a king
+    - wonderful
+    - I am feeling very good
+    - I am great
+    - I am amazing
+    - I am going to save the world
+    - super stoked
+    - extremely good
+    - so so perfect
+    - so good
+    - so perfect
+
+- intent: mood_unhappy
+  examples: |
+    - my day was horriblecredit
+    - I am sad
+    - I don't feel very well
+    - I am disappointed
+    - super sad
+    - I'm so sad
+    - sad
+    - very sad
+    - unhappy
+    - not good
+    - not very good
+    - extremly sad
+    - so saad
+    - so sad
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to a human?
+
+- intent: list_metrics
+  examples: |
+    - What metrics can I see?
+    - Can you list my metrics?
+    - what metrics are available?
+    - available metrics
+    - metrics
+    - list metrics
+    - get all metrics
+
+- intent: list_dimensions
+  examples: |
+    - List dimensions for [authorized_payments](measurement)
+    - [authorized payments](measurement) tags
+    - What are the labels for [authorized payments](measurement)?
+    - Give me all the [failed_payments](measurement) labels
+    - What are the [failed payments](measurement) tags?
+    - Show me all the tags for [authorized payments](measurement)
+    - Filters for [failed transactions](measurement]
+    - What filters are available on [transactions](measurement)?
+    - show me the [failed transactions](measurement) filters
+    - Retrieve [transactions](measurement) labels
+    - how can I filter [successful payments](measurement)?
+
+- intent: count_measurements
+  examples: |
+    - [payments authorized](measurement) today
+    - [successful payments](measurement) today
+    - how many [payments succeeded](measurement) today?
+    - [authorized payment](measurement) count in the last week
+    - how many [failed_payments]{"entity": "measurement", "value": "failed_payments"} last thursday?
+    - give me the total number of [transactions](measurement) in the last month?
+    - count all [failed_payments] made in the past two weeks?
+    - total number of [transactions] this week
+    - how many [payments authorized] on Friday May 1st 2020?
+
+
+- synonym: authorized_payments
+  examples: |
+    - payments
+    - successful payments
+    - transactions
+    - authorized payments
+    - transaction
+    - payment
+    - authorized transaction
+    - payments authorized
+    - payments succeeded
+    - transactions authorized
+
+- synonym: failed_payments
+  examples: |
+    - failed payments
+    - unsuccessful payments
+    - transaction failures
+    - payment failures
+    - failures
+    - failed transaction
+    - failed payment
+    - payments failed
+    - payment failures
+
