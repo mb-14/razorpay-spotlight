@@ -45,7 +45,7 @@ func init() {
 	}
 }
 
-func generatePayload(createdAt time.Time) []byte {
+func generatePayloadJson(createdAt time.Time) json.Json {
 	method := methodChooser.Pick().(string)
 	template := templates[fmt.Sprintf("%s_%s.json", *event, method)]
 	if method == "netbanking" {
@@ -79,7 +79,7 @@ func generatePayload(createdAt time.Time) []byte {
 	}
 
 	template.Set("payload.payment.entity.created_at", []byte(fmt.Sprintf(`%d`, createdAt.Unix())))
-	return template.Data
+	return template
 }
 
 func str(s string) []byte {
