@@ -13,4 +13,4 @@ go build -o generator .
 
 # To geneate failure events
 ./generator -mode=backfill -interval=5000 -duration=10 -event=payment_failed
-``
+```
