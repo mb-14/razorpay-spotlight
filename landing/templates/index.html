@@ -12,4 +12,18 @@ Razorpay spotlight is a tool built specifically around this premise. Using Spotl
       <li> Query spotlight </li>
 
 	</div>
+	<div class="chat-container"></div>
+
+  <script src="https://npm-scalableminds.s3.eu-central-1.amazonaws.com/@scalableminds/chatroom@master/dist/Chatroom.js"></script>
+  <script type="text/javascript">
+    var chatroom = new window.Chatroom({
+      host: "http://localhost:5005",
+      title: "Chat with Spotlight",
+      container: document.querySelector(".chat-container"),
+      welcomeMessage: "Hi, I am Spotlight. How may I help you?",
+      speechRecognition: "en-US",
+      voiceLang: "en-US"
+    });
+    chatroom.openChat();
+  </script>
 {% endblock %}

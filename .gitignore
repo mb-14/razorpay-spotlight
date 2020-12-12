@@ -1,3 +1,5 @@
 .vscode/
+venv/
 webhook/pkg/
 webhook/spotlight
+__pycache__
