@@ -12,18 +12,29 @@ rules:
   - intent: bot_challenge
   - action: utter_iamabot
 
-- rule: List metrics when the user asks for it
-  steps:
-  - intent: list_metrics
-  - action: action_list_metrics
+# - rule: List metrics when the user asks for it
+#   steps:
+#   - intent: list_metrics
+#   - action: action_list_metrics
 
-- rule: List dimensions for a metric
-  steps:
-  - intent: list_dimensions
-  - action: action_list_dimensions
+# - rule: List dimensions for a metric
+#   steps:
+#   - intent: list_dimensions
+#   - action: action_list_dimensions
 
 - rule: Retrieve counts for a metric
   steps:
   - intent: count_measurements
   - action: action_count_measurements
+
+- rule: Retrieve sum for a metric
+  steps:
+  - intent: sum_measurements
+  - action: action_sum_measurements
+
+- rule: Show help
+  steps: 
+  - intent: help
+  - action: utter_help
+  
 

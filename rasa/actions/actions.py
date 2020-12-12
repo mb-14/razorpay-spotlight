@@ -9,6 +9,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from typing import Dict, Text, Any, List, Union, Optional
 from influxdb import InfluxDBClient
 from dateutil import relativedelta, parser
+from actions.parser import parse_time
 
 
 client = InfluxDBClient('localhost', 8086, '', '', 'rzpftx')
@@ -73,15 +74,22 @@ class ActionCountMeasurements(Action):
 
         measurement = next(
             tracker.get_latest_entity_values("measurement"), None)
-        time = self.parse_time(tracker.latest_message)
+
+        method = next(
+            tracker.get_latest_entity_values("method"), None)
+
+        time = parse_time(tracker.latest_message)
 
         if measurement not in ["authorized_payments", "failed_payments"]:
             dispatcher.utter_message(
                 "Could not recognize metric: {}".format(measurement))
             return []
+        filter = "and method = '{}'".format(
+            method) if (method is not None) else ""
 
-        query = "SELECT COUNT(*) FROM {} where time >= '{}' and time <= '{}'".format(
-            measurements[measurement], time["start_time"], time["end_time"])
+        query = "SELECT COUNT(*) FROM {} where time >= '{}' and time <= '{}' {}".format(
+            measurements[measurement], time["start_time"], time["end_time"], filter)
+
         print(query)
 
         result = client.query(query)
@@ -90,49 +98,39 @@ class ActionCountMeasurements(Action):
         dispatcher.utter_message("Count: {}".format(count))
         return []
 
-    def parse_time(self, latest_message):
-        timeinfo = next((x for x in latest_message.get(
-            "entities") if x["entity"] == "time"), {}).get("additional_info", None)
-        if timeinfo.get("type") == "intervalisoformat":
-            return self.close_interval_duckling_time(timeinfo)
-        elif timeinfo.get("type") == "value":
-            return self.make_interval_from_value_duckling_time(timeinfo)
 
-    def close_interval_duckling_time(self,
-                                     timeinfo: Dict[Text, Any]
-                                     ) -> Optional[Dict[Text, Any]]:
-        grain = timeinfo.get("to", timeinfo.get("from", {})).get("grain")
-        start = timeinfo.get("from", {}).get("value")
-        end = timeinfo.get("to", {}).get("value")
-        if (start or end) and not (start and end):
-            deltaargs = {f"{grain}s": 1}
-            delta = relativedelta.relativedelta(**deltaargs)
-            if start:
-                parsedstart = parser.isoparse(start)
-                parsedend = parsedstart + delta
-                end = parsedend.isoformat()
-            elif end:
-                parsedend = parser.isoparse(end)
-                parsedstart = parsedend - delta
-                start = parsedstart.isoformat()
-        return {
-            "start_time": start,
-            "end_time": end,
-            "grain": grain
-        }
+class ActionSumMeasurements(Action):
+    def name(self) -> Text:
+        return "action_sum_measurements"
 
-    def make_interval_from_value_duckling_time(
-        self, timeinfo: Dict[Text, Any]
-    ) -> Dict[Text, Any]:
-        grain = timeinfo.get("grain")
-        start = timeinfo.get("value")
-        parsedstart = parser.isoparse(start)
-        deltaargs = {f"{grain}s": 1}
-        delta = relativedelta.relativedelta(**deltaargs)
-        parsedend = parsedstart + delta
-        end = parsedend.isoformat()
-        return {
-            "start_time": start,
-            "end_time": end,
-            "grain": grain,
-        }
+    def run(self,
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        measurement = next(
+            tracker.get_latest_entity_values("measurement"), None)
+
+        method = next(
+            tracker.get_latest_entity_values("method"), None)
+
+        filter = "and method = '{}'".format(
+            method) if (method is not None) else ""
+
+        time = parse_time(tracker.latest_message)
+
+        if measurement not in ["authorized_payments", "failed_payments"]:
+            dispatcher.utter_message(
+                "Could not recognize metric: {}".format(measurement))
+            return []
+
+        query = "SELECT SUM(amount) as amount FROM {} where time >= '{}' and time <= '{}' {}".format(
+            measurements[measurement], time["start_time"], time["end_time"], filter)
+        
+        print(query)
+
+        result = client.query(query)
+        points = list(result.get_points())
+        sum = points[0].get("amount", 0) if (len(points) == 1) else 0
+        dispatcher.utter_message("INR: {}".format(sum/100))
+        return []

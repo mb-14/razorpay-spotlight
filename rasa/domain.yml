@@ -3,43 +3,49 @@ version: "2.0"
 intents:
   - greet
   - goodbye
-  - affirm
-  - deny
-  - mood_great
-  - mood_unhappy
   - bot_challenge
-  - list_metrics
-  - list_dimensions
   - count_measurements
+  - sum_measurements
+  - help
 
 entities:
   - measurement
   - time
+  - method
 
 responses:
   utter_greet:
-  - text: "Hey! How are you?"
+    - text: "Hey! How can I help you?"
 
   utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
+    - text: "Here is something to cheer you up:"
+      image: "https://i.imgur.com/nGF1K8f.jpg"
 
   utter_did_that_help:
-  - text: "Did that help you?"
+    - text: "Did that help you?"
 
   utter_happy:
-  - text: "Great, carry on!"
+    - text: "Great, carry on!"
 
   utter_goodbye:
-  - text: "Bye"
+    - text: "Bye"
 
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+    - text: "I am a bot, powered by Rasa."
+
+  utter_help:
+    - text: |
+        Here's a list of things I can do:
+          - Fetch success rate
+          - Get payment (authorized or failed) counts
+          - Get payment (authorized or failed) volumes
+          - Set alerts
 
 actions:
   - action_list_metrics
   - action_list_dimensions
   - action_count_measurements
+  - action_sum_measurements
 
 session_config:
   session_expiration_time: 60
