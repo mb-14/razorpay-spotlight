@@ -75,7 +75,10 @@ func generatePayloadJson(createdAt time.Time) json.Json {
 	for _, field := range config.RangeFields {
 		value := rand.Intn(field.Max-field.Min) + field.Min
 		template.Set(field.Path, []byte(fmt.Sprintf(`%d`, value)))
-
+	}
+	for _, error_field := range config.ErrorFields {
+		value := field.Values[rand.Intn(len(field.Values))]
+		template.Set(field.Path, str(value))
 	}
 
 	template.Set("payload.payment.entity.created_at", []byte(fmt.Sprintf(`%d`, createdAt.Unix())))

@@ -25,3 +25,6 @@ range_fields:
   - path: payload.payment.entity.amount
     min: 10000
     max: 50000
+error_fields:
+  - path: payload.payment.entity.error_step
+    values: ["payment_initiation", "payment_authentication", "payment_authorization", "payment_capture", "payment_eligibility_check"]

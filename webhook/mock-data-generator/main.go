@@ -34,6 +34,10 @@ type Config struct {
 		Min  int    `yaml:"min"`
 		Max  int    `yaml:"max"`
 	} `yaml:"range_fields"`
+	ErrorFields []struct {
+		Path   string   `yaml:"path"`
+		Values []string `yaml:"values"`
+	} `yaml:"error_fields"`
 }
 
 var interval = flag.Int64("interval", 5000, "Number of milliseconds between events")

@@ -10,4 +10,7 @@ go build -o generator .
 
 # To generate events for the last 10 days which are spaced out by 5000 milliseconds
 ./generator -mode=backfill -interval=5000 -duration=10
+
+# To geneate failure events
+./generator -mode=backfill -interval=5000 -duration=10 -event=payment_failed
 ``
