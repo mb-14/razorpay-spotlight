@@ -39,12 +39,12 @@ func generatePaymentEvent(json json.Json, event string) *write.Point {
 	amount, _ := json.GetInt("payload.payment.entity.amount")
 	createdAt, _ := json.GetTime("payload.payment.entity.created_at")
 	return influxdb2.NewPoint(event,
-		addTags(json),
+		addTags(json, event),
 		map[string]interface{}{"amount": amount},
 		createdAt)
 }
 
-func addTags(p json.Json) map[string]string {
+func addTags(p json.Json, event string) map[string]string {
 	tags := make(map[string]string)
 	// Common tags
 	method, _ := p.GetString("payload.payment.entity.method")
@@ -70,6 +70,10 @@ func addTags(p json.Json) map[string]string {
 		tags["cardType"], _ = p.GetString("payload.payment.entity.card.type")
 		tags["cardInternational"], _ = p.GetString("payload.payment.entity.card.international")
 		tags["cardIssuer"], _ = p.GetString("payload.payment.entity.card.issuer")
+	}
+
+	if event == "payment_failed" {
+		tags["errorSource"], _ = p.GetString("payload.payment.entity.error_source")
 	}
 
 	return tags
