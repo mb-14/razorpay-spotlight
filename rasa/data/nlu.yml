@@ -69,7 +69,7 @@ nlu:
 
 - intent: mood_unhappy
   examples: |
-    - my day was horrible
+    - my day was horriblecredit
     - I am sad
     - I don't feel very well
     - I am disappointed
@@ -90,3 +90,49 @@ nlu:
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+
+- intent: list_metrics
+  examples: |
+    - What metrics can I see?
+    - Can you list my metrics?
+    - what metrics are available?
+    - available metrics
+    - metrics
+    - list metrics
+    - get all metrics
+
+- intent: list_dimensions
+  examples: |
+    - List dimensions for [authorized payments](measurement)
+    - [payments](measurement) tags
+    - What are the labels for [payment](measurement)?
+    - Give me all the [failed payments](measurement) labels
+    - What are the [failed payments](measurement) tags?
+    - Show me all the tags for [authorized payments](measurement)
+    - Filters for [failed transactions](measurement]
+    - What filters are available on [transactions](measurement)?
+    - show me the [failed transactions](measurement) filters
+    - Retrieve [transactions](measurement) labels
+    - how can I filter [successful payments](measurement)?
+
+
+- synonym: payments
+  examples: |
+    - payments
+    - successful payments
+    - transactions
+    - authorized payments
+    - transaction
+    - payment
+    - authorized transaction
+
+- synonym: failed_payments
+  examples: |
+    - failed payments
+    - unsuccessful payments
+    - transaction failures
+    - payment failures
+    - failures
+    - failed transaction
+    - failed payment
+

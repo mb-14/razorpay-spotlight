@@ -11,3 +11,13 @@ rules:
   steps:
   - intent: bot_challenge
   - action: utter_iamabot
+
+- rule: List metrics when the user asks for it
+  steps:
+  - intent: list_metrics
+  - action: action_list_metrics
+
+- rule: List dimensions for a metric
+  steps:
+  - intent: list_dimensions
+  - action: action_list_dimensions
