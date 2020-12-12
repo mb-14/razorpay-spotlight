@@ -6,12 +6,15 @@ import (
 	"math/rand"
 	"net/http"
 	"time"
+
+	"github.com/cheggaaa/pb/v3"
 )
 
 func backfillEvents() {
 	timestamps := generateTimestamps()
 	fmt.Printf("Number of events: %d\n", len(timestamps))
 	numJobs := len(timestamps)
+	bar := pb.StartNew(numJobs)
 	jobs := make(chan time.Time, numJobs)
 	results := make(chan error, numJobs)
 
@@ -38,7 +41,9 @@ func backfillEvents() {
 		if err != nil {
 			fmt.Println(err.Error())
 		}
+		bar.Increment()
 	}
+	bar.Finish()
 }
 
 func worker(id int, jobs <-chan time.Time, results chan<- error) {
@@ -49,6 +54,7 @@ func worker(id int, jobs <-chan time.Time, results chan<- error) {
 			results <- err
 			return
 		}
+		defer resp.Body.Close()
 		if resp.StatusCode != http.StatusOK {
 			var message []byte
 			resp.Body.Read(message)
