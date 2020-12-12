@@ -23,7 +23,6 @@ type MethodConfig struct {
 }
 
 type Config struct {
-	Event       string       `yaml:"event"`
 	Netbanking  MethodConfig `yaml:"netbanking"`
 	Card        MethodConfig `yaml:"card"`
 	Wallet      MethodConfig `yaml:"wallet"`

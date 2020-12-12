@@ -1,4 +1,3 @@
-event: payment_authorized
 netbanking:
   weight: 2
   fields:
