@@ -8,6 +8,13 @@ import (
 	"time"
 
 	"github.com/cheggaaa/pb/v3"
+	"github.com/ewohltman/pool"
+)
+
+var (
+	standardLibClient = &http.Client{}
+
+	pooledClient = pool.NewPClient(standardLibClient, 25, 200)
 )
 
 func backfillEvents() {
@@ -49,7 +56,8 @@ func backfillEvents() {
 func worker(id int, jobs <-chan time.Time, results chan<- error) {
 	for j := range jobs {
 		payload := bytes.NewBuffer(generatePayload(j))
-		resp, err := http.Post(Endpoint, "application/json", payload)
+		req, err := http.NewRequest("POST", Endpoint, payload)
+		resp, err := pooledClient.DoPool(req)
 		if err != nil {
 			results <- err
 			return
