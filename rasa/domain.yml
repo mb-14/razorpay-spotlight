@@ -10,9 +10,11 @@ intents:
   - bot_challenge
   - list_metrics
   - list_dimensions
+  - count_measurements
 
 entities:
   - measurement
+  - time
 
 responses:
   utter_greet:
@@ -37,6 +39,7 @@ responses:
 actions:
   - action_list_metrics
   - action_list_dimensions
+  - action_count_measurements
 
 session_config:
   session_expiration_time: 60

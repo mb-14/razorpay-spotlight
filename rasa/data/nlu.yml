@@ -103,10 +103,10 @@ nlu:
 
 - intent: list_dimensions
   examples: |
-    - List dimensions for [authorized payments](measurement)
-    - [payments](measurement) tags
-    - What are the labels for [payment](measurement)?
-    - Give me all the [failed payments](measurement) labels
+    - List dimensions for [authorized_payments](measurement)
+    - [authorized payments](measurement) tags
+    - What are the labels for [authorized payments](measurement)?
+    - Give me all the [failed_payments](measurement) labels
     - What are the [failed payments](measurement) tags?
     - Show me all the tags for [authorized payments](measurement)
     - Filters for [failed transactions](measurement]
@@ -115,8 +115,20 @@ nlu:
     - Retrieve [transactions](measurement) labels
     - how can I filter [successful payments](measurement)?
 
+- intent: count_measurements
+  examples: |
+    - [payments authorized](measurement) today
+    - [successful payments](measurement) today
+    - how many [payments succeeded](measurement) today?
+    - [authorized payment](measurement) count in the last week
+    - how many [failed_payments]{"entity": "measurement", "value": "failed_payments"} last thursday?
+    - give me the total number of [transactions](measurement) in the last month?
+    - count all [failed_payments] made in the past two weeks?
+    - total number of [transactions] this week
+    - how many [payments authorized] on Friday May 1st 2020?
 
-- synonym: payments
+
+- synonym: authorized_payments
   examples: |
     - payments
     - successful payments
@@ -125,6 +137,9 @@ nlu:
     - transaction
     - payment
     - authorized transaction
+    - payments authorized
+    - payments succeeded
+    - transactions authorized
 
 - synonym: failed_payments
   examples: |
@@ -135,4 +150,6 @@ nlu:
     - failures
     - failed transaction
     - failed payment
+    - payments failed
+    - payment failures
 

@@ -21,3 +21,9 @@ rules:
   steps:
   - intent: list_dimensions
   - action: action_list_dimensions
+
+- rule: Retrieve counts for a metric
+  steps:
+  - intent: count_measurements
+  - action: action_count_measurements
+
