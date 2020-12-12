@@ -6,18 +6,44 @@
 
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import SlotSet
 from typing import Dict, Text, Any, List, Union, Optional
-from influxdb import InfluxDBClient
 from dateutil import relativedelta, parser
 from actions.parser import parse_time
-
-
-client = InfluxDBClient('localhost', 8086, '', '', 'rzpftx')
+from actions.dao import get_sum, get_count, get_tags
 
 measurements = {
     "authorized_payments": "payment_authorized",
     "failed_payments": "payment_failed"
 }
+
+
+def get_time(tracker: Tracker,  dispatcher: CollectingDispatcher):
+    time = next(tracker.get_latest_entity_values("time"), None)
+    parsed_time = parse_time(
+        tracker.latest_message) if time is not None else {}
+
+    start_time = parsed_time.get("start_time", tracker.get_slot('start_time'))
+    end_time = parsed_time.get("end_time", tracker.get_slot('end_time'))
+
+    if start_time is None or end_time is None:
+        dispatcher.utter_message(
+            "Please specify a time or duration like today, last week, last friday to this monday etc")
+        return (None, None, True)
+
+    return (start_time, end_time, False)
+
+
+def get_measurement(tracker:  Tracker,  dispatcher: CollectingDispatcher):
+    measurement = next(tracker.get_latest_entity_values(
+        "measurement"), tracker.get_slot('measurement'))
+
+    if measurement not in ["authorized_payments", "failed_payments"]:
+        dispatcher.utter_message(
+            "Could not recognize metric: {}".format(measurement))
+        return (None, True)
+
+    return (measurement, False)
 
 
 class ActionListMetrics(Action):
@@ -54,10 +80,8 @@ class ActionListDimensions(Action):
                 "Could not recognize metric: {}".format(measurement))
             return []
 
-        result = client.query(
-            "SHOW TAG KEYS FROM {}".format(measurements[measurement]))
-        points = list(result.get_points())
-        tags = map(lambda x: x["tagKey"], points)
+        tags = get_tags(measurements[measurement])
+
         dispatcher.utter_message("The following dimensions are available for {}: {}".format(
             measurement, ", ".join(tags)))
         return []
@@ -72,31 +96,22 @@ class ActionCountMeasurements(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        measurement = next(
-            tracker.get_latest_entity_values("measurement"), None)
-
         method = next(
             tracker.get_latest_entity_values("method"), None)
 
-        time = parse_time(tracker.latest_message)
-
-        if measurement not in ["authorized_payments", "failed_payments"]:
-            dispatcher.utter_message(
-                "Could not recognize metric: {}".format(measurement))
+        measurement, error = get_measurement(tracker, dispatcher)
+        if error:
             return []
-        filter = "and method = '{}'".format(
-            method) if (method is not None) else ""
 
-        query = "SELECT COUNT(*) FROM {} where time >= '{}' and time <= '{}' {}".format(
-            measurements[measurement], time["start_time"], time["end_time"], filter)
+        start_time, end_time, error = get_time(tracker, dispatcher)
+        if error:
+            return []
 
-        print(query)
+        count = get_count(
+            measurements[measurement], start_time, end_time, method)
 
-        result = client.query(query)
-        points = list(result.get_points())
-        count = points[0].get("count_amount", 0) if (len(points) == 1) else 0
         dispatcher.utter_message("Count: {}".format(count))
-        return []
+        return [SlotSet("start_time", start_time), SlotSet("end_time", end_time), SlotSet("measurement", measurement), SlotSet("mode", "count")]
 
 
 class ActionSumMeasurements(Action):
@@ -108,29 +123,52 @@ class ActionSumMeasurements(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        measurement = next(
-            tracker.get_latest_entity_values("measurement"), None)
+        method = next(
+            tracker.get_latest_entity_values("method"), None)
+
+        measurement, error = get_measurement(tracker, dispatcher)
+        if error:
+            return []
+
+        start_time, end_time, error = get_time(tracker, dispatcher)
+        if error:
+            return []
+
+        sum = get_sum(measurements[measurement],
+                      start_time, end_time, method)
+
+        dispatcher.utter_message("INR: {}".format(sum/100))
+        return [SlotSet("start_time", start_time), SlotSet("end_time", end_time), SlotSet("measurement", measurement), SlotSet("mode", "sum")]
+
+
+class ActionGetSuccessRate(Action):
+    def name(self) -> Text:
+        return "action_get_success_rate"
+
+    def run(self,
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         method = next(
             tracker.get_latest_entity_values("method"), None)
 
-        filter = "and method = '{}'".format(
-            method) if (method is not None) else ""
+        print(method)
 
-        time = parse_time(tracker.latest_message)
+        start_time, end_time, error = get_time(tracker, dispatcher)
 
-        if measurement not in ["authorized_payments", "failed_payments"]:
-            dispatcher.utter_message(
-                "Could not recognize metric: {}".format(measurement))
+        if error:
             return []
 
-        query = "SELECT SUM(amount) as amount FROM {} where time >= '{}' and time <= '{}' {}".format(
-            measurements[measurement], time["start_time"], time["end_time"], filter)
-        
-        print(query)
+        authorized_count = get_count(
+            "payment_authorized", start_time, end_time, method)
 
-        result = client.query(query)
-        points = list(result.get_points())
-        sum = points[0].get("amount", 0) if (len(points) == 1) else 0
-        dispatcher.utter_message("INR: {}".format(sum/100))
-        return []
+        failure_count = get_count(
+            "payment_failed", start_time, end_time, method)
+
+        success_rate = 0 if (authorized_count + failure_count ==
+                             0) else authorized_count/(authorized_count + failure_count)
+
+        dispatcher.utter_message(
+            "Success Rate for : {:.2f}%".format(success_rate*100))
+        return [SlotSet("start_time", start_time), SlotSet("end_time", end_time), SlotSet("mode", "success_rate")]

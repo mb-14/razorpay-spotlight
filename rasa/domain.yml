@@ -1,52 +1,61 @@
-version: "2.0"
-
-intents:
-  - greet
-  - goodbye
-  - bot_challenge
-  - count_measurements
-  - sum_measurements
-  - help
-
-entities:
-  - measurement
-  - time
-  - method
-
-responses:
-  utter_greet:
-    - text: "Hey! How can I help you?"
-
-  utter_cheer_up:
-    - text: "Here is something to cheer you up:"
-      image: "https://i.imgur.com/nGF1K8f.jpg"
-
-  utter_did_that_help:
-    - text: "Did that help you?"
-
-  utter_happy:
-    - text: "Great, carry on!"
-
-  utter_goodbye:
-    - text: "Bye"
-
-  utter_iamabot:
-    - text: "I am a bot, powered by Rasa."
-
-  utter_help:
-    - text: |
-        Here's a list of things I can do:
-          - Fetch success rate
-          - Get payment (authorized or failed) counts
-          - Get payment (authorized or failed) volumes
-          - Set alerts
-
-actions:
-  - action_list_metrics
-  - action_list_dimensions
-  - action_count_measurements
-  - action_sum_measurements
-
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
+intents:
+- greet
+- goodbye
+- bot_challenge
+- count_measurements
+- sum_measurements
+- help
+- get_success_rate
+- switch_method
+- deny
+- mood_unhappy
+- list_metrics
+- mood_great
+- affirm
+entities:
+- measurement
+- time
+- method
+slots:
+  start_time:
+    type: text
+    initial_value: ''
+    influence_conversation: true
+  end_time:
+    type: text
+    initial_value: ''
+    influence_conversation: true
+  measurement:
+    type: text
+    initial_value: payments
+    influence_conversation: true
+  mode:
+    type: text
+    initial_value: ''
+    influence_conversation: true
+responses:
+  utter_greet:
+  - text: Hey! How can I help you?
+  utter_cheer_up:
+  - image: https://i.imgur.com/nGF1K8f.jpg
+    text: 'Here is something to cheer you up:'
+  utter_did_that_help:
+  - text: Did that help you?
+  utter_happy:
+  - text: Great, carry on!
+  utter_goodbye:
+  - text: Bye
+  utter_iamabot:
+  - text: I am a bot, powered by Rasa.
+  utter_help:
+  - text: "Here's a list of things I can do:\n  - Get success rate\n  - Get payment\
+      \ counts\n  - Get payment volumes\n"
+actions:
+- action_list_metrics
+- action_list_dimensions
+- action_count_measurements
+- action_sum_measurements
+- action_get_success_rate

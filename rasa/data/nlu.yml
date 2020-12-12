@@ -1,5 +1,4 @@
 version: "2.0"
-
 nlu:
 - intent: greet
   examples: |
@@ -16,7 +15,6 @@ nlu:
     - goodmorning
     - goodevening
     - good afternoon
-
 - intent: goodbye
   examples: |
     - good afternoon
@@ -30,7 +28,6 @@ nlu:
     - see you around
     - bye bye
     - see you later
-
 - intent: affirm
   examples: |
     - yes
@@ -39,7 +36,6 @@ nlu:
     - of course
     - that sounds good
     - correct
-
 - intent: deny
   examples: |
     - no
@@ -49,7 +45,6 @@ nlu:
     - don't like that
     - no way
     - not really
-
 - intent: mood_great
   examples: |
     - perfect
@@ -66,7 +61,6 @@ nlu:
     - so so perfect
     - so good
     - so perfect
-
 - intent: mood_unhappy
   examples: |
     - my day was horriblecredit
@@ -83,22 +77,18 @@ nlu:
     - extremly sad
     - so saad
     - so sad
-
 - intent: bot_challenge
   examples: |
     - are you a bot?
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
-
 - intent: help
   examples: |
     - What can you do?
     - Help
     - Help me
     - Instructions
-
-
 - intent: list_metrics
   examples: |
     - What metrics can I see?
@@ -108,51 +98,72 @@ nlu:
     - metrics
     - list metrics
     - get all metrics
-
-# - intent: list_dimensions
-#   examples: |
-#     - List dimensions for [authorized_payments](measurement)
-#     - [authorized payments](measurement) tags
-#     - What are the labels for [authorized payments](measurement)?
-#     - Give me all the [failed_payments](measurement) labels
-#     - What are the [failed payments](measurement) tags?
-#     - Show me all the tags for [authorized payments](measurement)
-#     - Filters for [failed transactions](measurement]
-#     - What filters are available on [transactions](measurement)?
-#     - show me the [failed transactions](measurement) filters
-#     - Retrieve [transactions](measurement) labels
-#     - how can I filter [successful payments](measurement)?
-
 - intent: count_measurements
   examples: |
     - get total [payments](measurement) for yesterday where method is [card](method)
     - get [payment](measurement) count for today where method is [netbanking](method)
     - get number of [failed_payments](measurement) on last Friday
     - total count of [failed payments](measurement) in this month where method is [upi](method)
-    - how many [payments authorized](measurement) last week where method is [wallet](method) 
+    - how many [payments authorized](measurement) last week where method is [wallet](method)
     - what is today's [authorized payment](measurement) count?
     - what was yesterday's [successful payment](measurement) count for [cards](method)?
     - what was last friday's [successful payment](measurement) count for [upi](method)?
     - give me the total number of [payments] on 1st October 2020 for [wallets](method).
     - get count of [payment failures](method) last week for [netbanking](method)
-
+    - get [payment failure]{"entity": "measurement", "value": "failed_payments"}  count for last two weeks
+    - get [unsuccesful payments](measurement) volume for today for [upi](method)
 - intent: sum_measurements
   examples: |
     - get total [payments](measurement) volume for yesterday where method is [card](method)
     - get [payment](measurement) volume for today where method is [netbanking](method)
     - get volume of [failed_payments](measurement) on last Friday
     - total volume of [failed payments](measurement) in this month where method is [upi](method)
-    - get volume of [authorized payments](measurement) last week where method is [wallet](method) 
-    - what is today's [failed payment](measurement) volume for [upi](method)? 
-    - give me the total volume of [payments] on 1st October 2020 for [upi](method).
-    - [failed payments] volume for the past two weeks for [cards](method)
-
-
-
+    - get volume of [authorized payments](measurement) last week where method is [wallet](method)
+    - what is today's [failed payment](measurement) volume for [upi](method)?
+    - give me the total volume of [payments](measurement) on 1st October 2020 for [upi](method).
+    - [failed payments](measurement) volume for the past two weeks for [cards](method)
+- intent: get_success_rate
+  examples: |
+    - get success rate for yesterday for [cards](method)
+    - fetch success rates for last week for [wallets](method)
+    - get today's success rate
+    - success rate for [upi](method) this week
+    - fetch yesterday's success rate for [netbanking](method)
+    - get [card](method) success rate for 2nd October
+    - get the [netbanking](method) success rates for the past two week
+    - get success rate for today
+    - get success rates for this week
+- intent: switch_method
+  examples: |
+    - get for [cards]{"entity": "method", "value": "card"}
+    - what about [upi](method)?
+    - how about [netbanking](method)
+    - check  for [wallets](method)
+    - check for [upi](method)
+    - check for [cards]{"entity": "method", "value": "card"}
+    - how about [wallets]{"entity": "method", "value": "wallet"}
+    - what about [wallets]{"entity": "method", "value": "wallet"}
+- synonym: failed_payments
+  examples: |
+    - payment failure
+    - failed payments
+    - unsuccessful payments
+    - transaction failures
+    - payment failures
+    - failures
+    - failed transaction
+    - failed payment
+    - payments failed
+    - unsuccesful payments
 - synonym: card
   examples: |
     - cards
-
+- synonym: wallet
+  examples: |
+    - wallets
+- synonym: success rate
+  examples: |
+    - success rates
 - synonym: authorized_payments
   examples: |
     - payments
@@ -165,16 +176,3 @@ nlu:
     - payments authorized
     - payments succeeded
     - transactions authorized
-
-- synonym: failed_payments
-  examples: |
-    - failed payments
-    - unsuccessful payments
-    - transaction failures
-    - payment failures
-    - failures
-    - failed transaction
-    - failed payment
-    - payments failed
-    - payment failures
-

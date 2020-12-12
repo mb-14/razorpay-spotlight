@@ -1,27 +1,14 @@
-{% extends "template.html" %}
-{% block content %}
-	<div class="jumbo">
-		<h2>Razorpay Spotlight</h2>
-		<br/>
-		<p>If used in the right way, real-time analytics can be a very useful tool for businesses. A myriad of use-cases ranging from enhancing customer experiences to immediate mitigation of system failures can be powered using real-time analytics.
+{% extends "template.html" %} {% block content %}
+<div class="chat-container"></div>
 
-Razorpay spotlight is a tool built specifically around this premise. Using Spotlight, businesses on Razorpay can draw real-time insights surrounding their financial transactions and also leverage those insights to automate workflows. And it does all of it using Razorpay webhooks.</p>
-
-    <ul>
-      <li><a href="http://159.65.149.215:3000/">Grafana dashboard</a></li>
-      <li> Query spotlight </li>
-
-	</div>
-	<div class="chat-container"></div>
-
-  <script src="https://npm-scalableminds.s3.eu-central-1.amazonaws.com/@scalableminds/chatroom@master/dist/Chatroom.js"></script>
-  <script type="text/javascript">
-    var chatroom = new window.Chatroom({
-      host: "http://localhost:5005",
-      title: "Chat with Spotlight",
-      container: document.querySelector(".chat-container"),
-      speechRecognition: "en-US"
-    });
-    chatroom.openChat();
-  </script>
+<script src="https://npm-scalableminds.s3.eu-central-1.amazonaws.com/@scalableminds/chatroom@master/dist/Chatroom.js"></script>
+<script type="text/javascript">
+  var chatroom = new window.Chatroom({
+    host: "http://localhost:5005",
+    title: "Chat with Spotlight",
+    container: document.querySelector(".chat-container"),
+    speechRecognition: "en-US",
+  });
+  chatroom.openChat();
+</script>
 {% endblock %}

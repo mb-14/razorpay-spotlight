@@ -1,10 +1,40 @@
 version: "2.0"
-
 stories:
-
 - story: happy path
   steps:
   - intent: greet
   - action: utter_greet
   - intent: help
   - action: utter_help
+- story: Story from Conversation ID 6d245b524e1945cd8825e4650f486fc6
+  steps:
+  - intent: get_success_rate
+    entities:
+    - time: '2020-12-13T00:00:00.000+05:30'
+  - action: action_get_success_rate
+  - slot_was_set:
+    - start_time: '2020-12-13T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-14T00:00:00+05:30'
+  - slot_was_set:
+    - mode: success_rate
+  - intent: switch_method
+    entities:
+    - method: upi
+  - action: action_get_success_rate
+  - slot_was_set:
+    - start_time: '2020-12-13T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-14T00:00:00+05:30'
+  - slot_was_set:
+    - mode: success_rate
+  - intent: switch_method
+    entities:
+    - method: wallet
+  - action: action_get_success_rate
+  - slot_was_set:
+    - start_time: '2020-12-13T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-14T00:00:00+05:30'
+  - slot_was_set:
+    - mode: success_rate

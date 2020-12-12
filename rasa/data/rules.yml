@@ -1,40 +1,42 @@
 version: "2.0"
 
 rules:
+  - rule: Say goodbye anytime the user says goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
 
-- rule: Say goodbye anytime the user says goodbye
-  steps:
-  - intent: goodbye
-  - action: utter_goodbye
+  - rule: Say 'I am a bot' anytime the user challenges
+    steps:
+      - intent: bot_challenge
+      - action: utter_iamabot
 
-- rule: Say 'I am a bot' anytime the user challenges
-  steps:
-  - intent: bot_challenge
-  - action: utter_iamabot
+  # - rule: List metrics when the user asks for it
+  #   steps:
+  #   - intent: list_metrics
+  #   - action: action_list_metrics
 
-# - rule: List metrics when the user asks for it
-#   steps:
-#   - intent: list_metrics
-#   - action: action_list_metrics
+  # - rule: List dimensions for a metric
+  #   steps:
+  #   - intent: list_dimensions
+  #   - action: action_list_dimensions
 
-# - rule: List dimensions for a metric
-#   steps:
-#   - intent: list_dimensions
-#   - action: action_list_dimensions
+  - rule: Retrieve counts for a metric
+    steps:
+      - intent: count_measurements
+      - action: action_count_measurements
 
-- rule: Retrieve counts for a metric
-  steps:
-  - intent: count_measurements
-  - action: action_count_measurements
+  - rule: Retrieve sum for a metric
+    steps:
+      - intent: sum_measurements
+      - action: action_sum_measurements
 
-- rule: Retrieve sum for a metric
-  steps:
-  - intent: sum_measurements
-  - action: action_sum_measurements
+  - rule: Get success rate
+    steps:
+      - intent: get_success_rate
+      - action: action_get_success_rate
 
-- rule: Show help
-  steps: 
-  - intent: help
-  - action: utter_help
-  
-
+  - rule: Show help
+    steps:
+      - intent: help
+      - action: utter_help
