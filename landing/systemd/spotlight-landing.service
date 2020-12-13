@@ -1,0 +1,13 @@
+# /etc/systemd/system/spotlight-landing.service
+[Unit]
+Description="spotlight-landing"
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/root/landing/venv/bin/gunicorn --chdir /root/landing/ app:app
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
