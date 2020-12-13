@@ -38,3 +38,226 @@ stories:
     - end_time: '2020-12-14T00:00:00+05:30'
   - slot_was_set:
     - mode: success_rate
+- story: Story from Conversation ID f48b9f122e904e0294724b016b960300
+  steps:
+  - intent: count_measurements
+    entities:
+    - measurement: authorized_payments
+    - method: card
+    - time: '2020-12-07T00:00:00.000+05:30'
+  - slot_was_set:
+    - measurement: authorized_payments
+  - action: action_count_measurements
+  - slot_was_set:
+    - start_time: '2020-12-07T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-14T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: authorized_payments
+  - slot_was_set:
+    - mode: count
+  - intent: switch_method
+    entities:
+    - method: wallet
+  - action: action_count_measurements
+  - slot_was_set:
+    - start_time: '2020-12-07T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-14T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: authorized_payments
+  - slot_was_set:
+    - mode: count
+  - intent: switch_method
+    entities:
+    - method: netbanking
+  - action: action_count_measurements
+  - slot_was_set:
+    - start_time: '2020-12-07T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-14T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: authorized_payments
+  - slot_was_set:
+    - mode: count
+- story: Story from Conversation ID 02155d99af27456f863b39658a7c37bd
+  steps:
+  - intent: sum_measurements
+    entities:
+    - measurement: failed_payments
+    - time: '2020-12-13T00:00:00.000+05:30'
+  - slot_was_set:
+    - measurement: failed_payments
+  - action: action_sum_measurements
+  - slot_was_set:
+    - start_time: '2020-12-13T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-14T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: failed_payments
+  - slot_was_set:
+    - mode: sum
+  - intent: sum_measurements
+    entities:
+    - measurement: failed_payments
+    - time: '2020-12-12T00:00:00.000+05:30'
+  - slot_was_set:
+    - measurement: failed_payments
+  - action: action_sum_measurements
+  - slot_was_set:
+    - start_time: '2020-12-12T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-13T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: failed_payments
+  - slot_was_set:
+    - mode: sum
+  - intent: switch_method
+    entities:
+    - method: card
+  - action: action_sum_measurements
+  - slot_was_set:
+    - start_time: '2020-12-12T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-13T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: failed_payments
+  - slot_was_set:
+    - mode: sum
+  - intent: switch_method
+    entities:
+    - method: wallet
+  - action: action_sum_measurements
+  - slot_was_set:
+    - start_time: '2020-12-12T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-13T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: failed_payments
+  - slot_was_set:
+    - mode: sum
+  - intent: get_success_rate
+    entities:
+    - method: upi
+    - time: '2020-12-11T00:00:00.000+05:30'
+  - action: action_get_success_rate
+  - slot_was_set:
+    - start_time: '2020-12-11T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-12T00:00:00+05:30'
+  - slot_was_set:
+    - mode: success_rate
+  - intent: switch_method
+    entities:
+    - method: netbanking
+  - action: action_get_success_rate
+  - slot_was_set:
+    - start_time: '2020-12-11T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-12T00:00:00+05:30'
+  - slot_was_set:
+    - mode: success_rate
+- story: Story from Conversation ID 0d4fd8064b6644829adfe0721cde562b
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: help
+  - action: utter_help
+  - intent: sum_measurements
+    entities:
+    - measurement: failed_payments
+    - time: '2020-12-11T00:00:00.000+05:30'
+  - slot_was_set:
+    - measurement: failed_payments
+  - action: action_sum_measurements
+  - slot_was_set:
+    - start_time: '2020-12-11T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-12T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: failed_payments
+  - slot_was_set:
+    - mode: sum
+  - intent: switch_method
+    entities:
+    - method: upi
+  - action: action_sum_measurements
+  - slot_was_set:
+    - start_time: '2020-12-11T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-12T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: failed_payments
+  - slot_was_set:
+    - mode: sum
+  - intent: switch_method
+    entities:
+    - method: netbanking
+  - action: action_sum_measurements
+  - slot_was_set:
+    - start_time: '2020-12-11T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-12T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: failed_payments
+  - slot_was_set:
+    - mode: sum
+  - intent: count_measurements
+    entities:
+    - measurement: authorized_payments
+    - method: wallet
+    - time: '2020-12-01T00:00:00.000+05:30'
+  - slot_was_set:
+    - measurement: authorized_payments
+  - action: action_count_measurements
+  - slot_was_set:
+    - start_time: '2020-12-01T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2021-01-01T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: authorized_payments
+  - slot_was_set:
+    - mode: count
+  - intent: switch_method
+    entities:
+    - method: card
+  - action: action_count_measurements
+  - slot_was_set:
+    - start_time: '2020-12-01T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2021-01-01T00:00:00+05:30'
+  - slot_was_set:
+    - measurement: authorized_payments
+  - slot_was_set:
+    - mode: count
+  - intent: get_success_rate
+    entities:
+    - method: netbanking
+    - time: '2020-12-12T00:00:00.000+05:30'
+  - action: action_get_success_rate
+  - slot_was_set:
+    - start_time: '2020-12-12T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-13T00:00:00+05:30'
+  - slot_was_set:
+    - mode: success_rate
+  - intent: switch_method
+    entities:
+    - method: upi
+  - action: action_get_success_rate
+  - slot_was_set:
+    - start_time: '2020-12-12T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-13T00:00:00+05:30'
+  - slot_was_set:
+    - mode: success_rate
+  - intent: switch_method
+    entities:
+    - method: card
+  - action: action_get_success_rate
+  - slot_was_set:
+    - start_time: '2020-12-12T00:00:00.000+05:30'
+  - slot_was_set:
+    - end_time: '2020-12-13T00:00:00+05:30'
+  - slot_was_set:
+    - mode: success_rate

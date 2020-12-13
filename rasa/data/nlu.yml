@@ -112,6 +112,7 @@ nlu:
     - get count of [payment failures](method) last week for [netbanking](method)
     - get [payment failure]{"entity": "measurement", "value": "failed_payments"}  count for last two weeks
     - get [unsuccesful payments](measurement) volume for today for [upi](method)
+    - get [payment]{"entity": "measurement", "value": "authorized_payments"} count this month for [wallets]{"entity": "method", "value": "wallet"}
 - intent: sum_measurements
   examples: |
     - get total [payments](measurement) volume for yesterday where method is [card](method)
@@ -133,6 +134,8 @@ nlu:
     - get the [netbanking](method) success rates for the past two week
     - get success rate for today
     - get success rates for this week
+    - get success rates for day before yesterday with for [upi](method)
+    - get yesterday's success rate for [netbanking](method)
 - intent: switch_method
   examples: |
     - get for [cards]{"entity": "method", "value": "card"}
@@ -143,6 +146,11 @@ nlu:
     - check for [cards]{"entity": "method", "value": "card"}
     - how about [wallets]{"entity": "method", "value": "wallet"}
     - what about [wallets]{"entity": "method", "value": "wallet"}
+    - check for [wallet](method)
+    - check for [netbanking](method)
+    - what about [netbanking](method)
+    - get for [upi](method)
+    - what about [cards]{"entity": "method", "value": "card"}
 - synonym: failed_payments
   examples: |
     - payment failure

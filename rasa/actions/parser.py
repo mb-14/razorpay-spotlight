@@ -5,7 +5,7 @@ from typing import Dict, Text, Any, Optional
 def parse_time(latest_message):
     timeinfo = next((x for x in latest_message.get(
         "entities") if x["entity"] == "time"), {}).get("additional_info", None)
-    if timeinfo.get("type") == "intervalisoformat":
+    if timeinfo.get("type") == "interval":
         return close_interval_duckling_time(timeinfo)
     elif timeinfo.get("type") == "value":
         return make_interval_from_value_duckling_time(timeinfo)

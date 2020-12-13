@@ -28,7 +28,7 @@ def get_time(tracker: Tracker,  dispatcher: CollectingDispatcher):
 
     if start_time is None or end_time is None:
         dispatcher.utter_message(
-            "Please specify a time or duration like today, last week, last friday to this monday etc")
+            "Please specify a time or duration like today, last week")
         return (None, None, True)
 
     return (start_time, end_time, False)
@@ -110,7 +110,10 @@ class ActionCountMeasurements(Action):
         count = get_count(
             measurements[measurement], start_time, end_time, method)
 
-        dispatcher.utter_message("Count: {}".format(count))
+        for_method = "for method = {}".format(
+            method) if method is not None else ""
+        dispatcher.utter_message("{} count {}: {}".format(
+            measurement, for_method, count))
         return [SlotSet("start_time", start_time), SlotSet("end_time", end_time), SlotSet("measurement", measurement), SlotSet("mode", "count")]
 
 
@@ -137,7 +140,12 @@ class ActionSumMeasurements(Action):
         sum = get_sum(measurements[measurement],
                       start_time, end_time, method)
 
-        dispatcher.utter_message("INR: {}".format(sum/100))
+        for_method = "for method = {}".format(
+            method) if method is not None else ""
+
+        dispatcher.utter_message("{} volume {}: {} INR".format(
+            measurement, for_method, format(sum/100)))
+
         return [SlotSet("start_time", start_time), SlotSet("end_time", end_time), SlotSet("measurement", measurement), SlotSet("mode", "sum")]
 
 
@@ -169,6 +177,8 @@ class ActionGetSuccessRate(Action):
         success_rate = 0 if (authorized_count + failure_count ==
                              0) else authorized_count/(authorized_count + failure_count)
 
+        for_method = "for method = {}".format(
+            method) if method is not None else ""
         dispatcher.utter_message(
-            "Success Rate for : {:.2f}%".format(success_rate*100))
+            "Success Rate {}: {:.2f}%".format(for_method, success_rate*100))
         return [SlotSet("start_time", start_time), SlotSet("end_time", end_time), SlotSet("mode", "success_rate")]

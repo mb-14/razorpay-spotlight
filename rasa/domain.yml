@@ -2,60 +2,64 @@ session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 intents:
-- greet
-- goodbye
-- bot_challenge
-- count_measurements
-- sum_measurements
-- help
-- get_success_rate
-- switch_method
-- deny
-- mood_unhappy
-- list_metrics
-- mood_great
-- affirm
+  - greet
+  - goodbye
+  - bot_challenge
+  - count_measurements
+  - sum_measurements
+  - help
+  - get_success_rate
+  - switch_method
+  - deny
+  - mood_unhappy
+  - list_metrics
+  - mood_great
+  - affirm
+  - nlu_fallback
 entities:
-- measurement
-- time
-- method
+  - measurement
+  - time
+  - method
 slots:
   start_time:
     type: text
-    initial_value: ''
-    influence_conversation: true
+    initial_value: ""
+    influence_conversation: false
   end_time:
     type: text
-    initial_value: ''
-    influence_conversation: true
+    initial_value: ""
+    influence_conversation: false
   measurement:
     type: text
     initial_value: payments
-    influence_conversation: true
+    influence_conversation: false
   mode:
     type: text
-    initial_value: ''
+    initial_value: ""
     influence_conversation: true
 responses:
   utter_greet:
-  - text: Hey! How can I help you?
+    - text: Hey! How can I help you?
   utter_cheer_up:
-  - image: https://i.imgur.com/nGF1K8f.jpg
-    text: 'Here is something to cheer you up:'
+    - image: https://i.imgur.com/nGF1K8f.jpg
+      text: "Here is something to cheer you up:"
   utter_did_that_help:
-  - text: Did that help you?
+    - text: Did that help you?
   utter_happy:
-  - text: Great, carry on!
+    - text: Great, carry on!
   utter_goodbye:
-  - text: Bye
+    - text: Bye
   utter_iamabot:
-  - text: I am a bot, powered by Rasa.
+    - text: I am a bot, powered by Rasa.
   utter_help:
-  - text: "Here's a list of things I can do:\n  - Get success rate\n  - Get payment\
-      \ counts\n  - Get payment volumes\n"
+    - text:
+        "Here's a list of things I can do:\n  - Get success rate\n  - Get payment\
+        \ counts\n  - Get payment volumes\n"
+  utter_please_rephrase:
+    - text: I'm sorry, I didn't quite understand that. Could you rephrase?
 actions:
-- action_list_metrics
-- action_list_dimensions
-- action_count_measurements
-- action_sum_measurements
-- action_get_success_rate
+  - action_list_metrics
+  - action_list_dimensions
+  - action_count_measurements
+  - action_sum_measurements
+  - action_get_success_rate

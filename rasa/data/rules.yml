@@ -40,3 +40,16 @@ rules:
     steps:
       - intent: help
       - action: utter_help
+
+  - rule: Ask the user to rephrase whenever they send a message with low NLU confidence
+    steps:
+      - intent: nlu_fallback
+      - action: utter_please_rephrase
+
+  - rule: Re-use success rate on method change
+    condition:
+      - slot_was_set:
+          - mode: "success_rate"
+    steps:
+      - intent: switch_method
+      - action: action_get_success_rate

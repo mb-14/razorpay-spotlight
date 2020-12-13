@@ -13,12 +13,10 @@ const (
 	DBName = "rzpftx"
 )
 
-var (
-	client   = influxdb2.NewClient("http://localhost:8086", "")
-	writeAPI = client.WriteAPIBlocking("", DBName)
-)
-
 func webhookEventHandler(c *gin.Context) {
+	client := influxdb2.NewClient("http://localhost:8086", "")
+	writeAPI := client.WriteAPIBlocking("", DBName)
+	defer client.Close()
 	payload, err := c.GetRawData()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
