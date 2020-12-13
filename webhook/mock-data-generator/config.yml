@@ -28,3 +28,8 @@ range_fields:
 error_fields:
   - path: payload.payment.entity.error_step
     values: ["payment_initiation", "payment_authentication", "payment_authorization", "payment_capture", "payment_eligibility_check"]
+notes_fields:
+  - path: payload.payment.entity.notes.city
+    values: ["ttnfvkcpkhe", "te7ud2evsmnuy", "tf346tek5k3d0", "tdr1v9qth37dp", "tek92esc6f7u7", "ts5dgrhgg3cxd"]
+  - path: payload.payment.entity.notes.product
+    values: ["product_1", "product_2", "product_3"]

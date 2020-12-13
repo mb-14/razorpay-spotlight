@@ -12,6 +12,11 @@ const (
 )
 
 const (
+	DBName     = "rzpftx"
+	DBEndpoint = "http://localhost:8086"
+)
+
+const (
 	Endpoint = "http://159.65.149.215:8080/webhook"
 	//Endpoint = "https://b9ef400928a48731d4888532d0493535.m.pipedream.net"
 )
@@ -38,6 +43,10 @@ type Config struct {
 		Path   string   `yaml:"path"`
 		Values []string `yaml:"values"`
 	} `yaml:"error_fields"`
+	NotesFields []struct {
+		Path   string   `yaml:"path"`
+		Values []string `yaml:"values"`
+	} `yaml:"notes_fields"`
 }
 
 var interval = flag.Int64("interval", 5000, "Number of milliseconds between events")
@@ -56,5 +65,7 @@ func main() {
 
 	if *mode == Backfill {
 		backfillEvents()
+	} else if *mode == Realtime {
+		generateRealtime()
 	}
 }

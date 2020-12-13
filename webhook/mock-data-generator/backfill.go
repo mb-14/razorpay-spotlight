@@ -8,11 +8,6 @@ import (
 	"github.com/mb-14/rzp-spotlight/webhook/rzp"
 )
 
-const (
-	DBName     = "rzpftx"
-	DBEndpoint = "http://localhost:8086"
-)
-
 func backfillEvents() {
 	client := influxdb2.NewClient(DBEndpoint, "")
 	writeAPI := client.WriteAPI("", DBName)
@@ -31,7 +26,7 @@ func generateTimestamps() []time.Time {
 	startTime := endTime.AddDate(0, 0, -*durationInDays)
 	timestamps := []time.Time{startTime}
 	for timestamps[len(timestamps)-1].Before(endTime) {
-		randInterval := random(*interval, 0.2)
+		randInterval := random(*interval, 0.35)
 		newTimestamp := timestamps[len(timestamps)-1].Add(time.Millisecond * time.Duration(randInterval))
 		timestamps = append(timestamps, newTimestamp)
 	}

@@ -76,5 +76,8 @@ func addTags(p json.Json, event string) map[string]string {
 		tags["errorSource"], _ = p.GetString("payload.payment.entity.error_source")
 	}
 
+	tags["product"], _ = p.GetString("payload.payment.entity.notes.product")
+	tags["city"], _ = p.GetString("payload.payment.entity.notes.city")
+
 	return tags
 }
